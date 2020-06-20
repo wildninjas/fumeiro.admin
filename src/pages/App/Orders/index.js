@@ -21,10 +21,10 @@ import {
 
 const INITIAL_STATE = {
   pendente: true,
-  cancelado: false,
+  cancelado: true,
   pago: true,
   enviado: true,
-  finalizado: false
+  finalizado: true
 }
 
 
