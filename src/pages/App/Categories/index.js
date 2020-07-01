@@ -5,6 +5,7 @@ import api from "../../../services/api";
 
 import NoImage from "../../../assets/images/no-image.jpg";
 import CategoryModal from "../../../components/CategoryModal";
+import ProductModal from '../../../components/ProductModal';
 
 import {
   Container,
@@ -18,13 +19,15 @@ import {
   EditDeleteOptions,
   EditButton,
   DeleteButton,
-  AddButton
+  AddButton,
+  UndoButton
 } from "../../../styles/buttons";
 
 function Categories() {
   const [categories, setCategories] = useState([]);
   const [editCategory, setEditCategory] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [searchProducts, setSearchProducts] = useState(false);
   const [deleteToast, setDeleteToast] = useState(null);
 
   useEffect(() => {
@@ -40,18 +43,42 @@ function Categories() {
   useEffect(() => {
     if (!modalOpen) {
       setEditCategory(null)
-      loadCategories()
     }
   }, [modalOpen]);
+
+  useEffect(() => {
+    if (searchProducts) {
+      
+    }
+  }, [searchProducts]);
+
+
 
   async function loadCategories() {
     try {
       const { data } = await api.get("admin/categories");
-
+      
       setCategories(data);
     } catch (err) {
       toast.error("Erro ao buscar categorias");
     }
+  }
+
+  async function loadProducts(id) {
+    if (searchProducts) {
+      loadCategories();
+      setSearchProducts(false);
+    } else {
+      try {
+        const { data } = await api.get(`admin/products/${id}`);
+        
+        setSearchProducts(true);
+        setCategories(data);
+      } catch (err) {
+        toast.error("Erro ao buscar produtos");
+      }
+    }
+    
   }
 
   function deleteToastNotification(id) {
@@ -70,52 +97,82 @@ function Categories() {
 
   async function deleteCategory(id) {
     try {
-      await api.delete(`admin/categories/${id}`);
+      await api.delete(`admin/products/${id}`);
 
       loadCategories();
-      toast.success("Categoria deletada!");
+      toast.success("Produto deletado!");
     } catch (err) {
-      toast.error("Não foi possível deletar a categoria");
+      toast.error("Não foi possível deletar o produto");
     }
   }
 
   function renderCategory(category) {
-    return (
+    if (searchProducts) {
+      return (
+        <CategoryCard key={category.id}>
+          <CategoryInfo>
+            <CategoryImage
+              imageUrl={category.image ? category.image.url : NoImage}
+            />
+            <CategoryDetails>
+              <strong >{category.name}</strong>
+              {/*<p>
+                <span>Tempo de preparo: </span>
+                {category.cook_time} mins
+              </p>*/}
+            </CategoryDetails>
+              
+    
+          </CategoryInfo>
+          <EditDeleteOptions>
+            <EditButton onClick={() => setEditCategory(category)} />
+            <DeleteButton
+              onClick={() => deleteToastNotification(category.id)}
+            />
+            <UndoButton onClick={() => loadProducts()} />
+          </EditDeleteOptions>
+  
+        </CategoryCard>
+      );
+    
+    } else {
+      return (
 		
-      <CategoryCard key={category.id}>
-        <CategoryInfo>
-          <CategoryImage
-            imageUrl={category.image ? category.image.url : NoImage}
-          />
-          <CategoryDetails>
-            <strong>{category.name}</strong>
-            <p>
-              <span>Descrição: </span>
-              {category.description}
-            </p>
-            {/*<p>
-              <span>Tempo de preparo: </span>
-              {category.cook_time} mins
-            </p>*/}
-          </CategoryDetails>
-        </CategoryInfo>
-        <EditDeleteOptions>
-          <EditButton onClick={() => setEditCategory(category)} />
-          <DeleteButton onClick={() => deleteToastNotification(category.id)} />
-        </EditDeleteOptions>
-      </CategoryCard>
-    );
+        <CategoryCard key={category.id}>
+          <CategoryInfo>
+            <CategoryImage
+              imageUrl={category.image ? category.image.url : NoImage}
+            />
+            <CategoryDetails>
+              <strong >{category.name}</strong>
+              {/*<p>
+                <span>Tempo de preparo: </span>
+                {category.cook_time} mins
+              </p>*/}
+            </CategoryDetails>
+              
+    
+          </CategoryInfo>
+          <EditDeleteOptions>
+            <AddButton onClick={() => loadProducts(category.id)} />
+          </EditDeleteOptions>
+  
+        </CategoryCard>
+      );
+    }
+    
   }
 
   return (
     <Container>
-      {!!modalOpen && (
-        <CategoryModal closeModal={() => setModalOpen(false)} category={editCategory} />
-      )}
       <AddButton onClick={() => setModalOpen(true)} />
+      {!!modalOpen && (
+        <ProductModal closeModal={() => setModalOpen(false)} product={editCategory} />
+      )}
+      
       {categories.map(category => renderCategory(category))}
     </Container>
   );
 }
 
-export default Categories;
+export default Categories ;

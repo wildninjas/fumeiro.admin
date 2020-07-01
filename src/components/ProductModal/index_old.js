@@ -11,8 +11,7 @@ function ProductModal({ product, closeModal }) {
     base_price: "",
     image_id: "",
     category_id: "",
-    product_sizes: [],
-    esgotado: 0
+    product_sizes: []
   });
   const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -38,14 +37,14 @@ function ProductModal({ product, closeModal }) {
     };
   }, [clickOutside]);
 
-  useEffect(() => {
-    if (product) {
-      setNewProduct({
-        ...product,
-       // product_sizes: product.sizes.map(size => size.size_id)
-      });
-    }
-  }, [product]);
+  //useEffect(() => {
+    //if (product) {
+      //setNewProduct({
+       // ...product,
+        //product_sizes: product.sizes.map(size => size.size_id)
+      //});
+    //}
+  //}, [product]);
 
   useEffect(() => {
     loadSizes();
@@ -84,7 +83,7 @@ function ProductModal({ product, closeModal }) {
 
       setSizes(data);
     } catch (err) {
-      //toast.error("Erro ao buscar os tamanhos");
+      toast.error("Erro ao buscar os tamanhos");
     }
   }
 
@@ -109,8 +108,7 @@ function ProductModal({ product, closeModal }) {
       image_id,
       category_id,
       product_sizes,
-      id,
-      esgotado
+      id
     } = newProduct;
     try {
       setLoading(true);
@@ -120,11 +118,9 @@ function ProductModal({ product, closeModal }) {
         base_price,
         image_id,
         category_id,
-        esgotado
-        //sizes: product_sizes.map(size => ({
-        //  size_id: size
-		//})
-		//)
+        sizes: product_sizes.map(size => ({
+          size_id: size
+        }))
       });
 
       closeModal();
@@ -142,8 +138,7 @@ function ProductModal({ product, closeModal }) {
       base_price,
       image_id,
       category_id,
-      product_sizes,
-      esgotado
+      product_sizes
     } = newProduct;
 
     try {
@@ -154,7 +149,7 @@ function ProductModal({ product, closeModal }) {
         base_price,
         image_id,
         category_id,
-        esgotado
+        
       });
 
       closeModal();
@@ -180,6 +175,7 @@ function ProductModal({ product, closeModal }) {
     <Container id="outsideProductModal">
       <ProductForm onSubmit={handleSubmit}>
         <h2>{product ? "Editar" : "Criar"} produto</h2>
+		
         <input
           name="name"
           value={newProduct.name}
@@ -228,39 +224,7 @@ function ProductModal({ product, closeModal }) {
             <option value="" />
           </select>
         </div>
-        <div>
-          <label>Esgotado</label>
-          <select
-            value={newProduct.esgotado}
-            name="esgotado"
-            onChange={handleInputChange}
-          >
-              <option value='1'>
-                  Sim
-              </option>
-                <option value='0'>
-                  Não
-                </option>
-          </select>
-        </div>
-       {/* <div>
-          <label>Tamanhos</label>
-          <select
-            multiple
-            value={newProduct.product_sizes}
-            name="product_sizes"
-            onChange={e => {
-              handleProductSizesChange(e);
-            }}
-          >
-            {sizes.length &&
-              sizes.map(size => (
-                <option key={3} value={3}>
-                  ok
-                </option>
-              ))}
-          </select>
-			  </div>*/}
+        
         <button type="submit">{loading ? "Carregando..." : "Salvar"}</button>
         <button type="button" className="close" onClick={() => closeModal()}>
           Fechar
@@ -275,8 +239,7 @@ ProductForm.propTypes = {
   base_price: PropTypes.string,
   image_id: PropTypes.number,
   category_id: PropTypes.number,
-  product_sizes: PropTypes.arrayOf(PropTypes.number),
-  esgotado: PropTypes.number
+  product_sizes: PropTypes.arrayOf(PropTypes.number)
 };
 
 export default ProductModal;

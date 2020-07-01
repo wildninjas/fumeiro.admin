@@ -1,18 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, Component } from "react";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 
 import api from "../../services/api";
 import { Container, ProductForm } from "./styles";
 
-function ProductModal({ product, closeModal }) {
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    base_price: "",
-    image_id: "",
-    category_id: "",
-    product_sizes: [],
-    esgotado: 0
+function EstadoModal({ estado, closeModal }) {
+  const [newEstado, setNewEstado] = useState({
+    open: 0
   });
   const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -39,17 +34,17 @@ function ProductModal({ product, closeModal }) {
   }, [clickOutside]);
 
   useEffect(() => {
-    if (product) {
-      setNewProduct({
-        ...product,
+    if (estado) {
+      setNewEstado({
+        ...estado,
        // product_sizes: product.sizes.map(size => size.size_id)
       });
     }
-  }, [product]);
+  }, [estado]);
 
   useEffect(() => {
     loadSizes();
-  }, [newProduct.category_id]);
+  }, [newEstado.category_id]);
 
   async function loadImages() {
     try {
@@ -72,14 +67,14 @@ function ProductModal({ product, closeModal }) {
   }
 
   async function loadSizes() {
-    if (!newProduct.category_id) {
+    if (!newEstado.category_id) {
       setSizes([]);
       return;
     }
 
     try {
       const { data } = await api.get("admin/sizes", {
-        params: { category: newProduct.category_id }
+        params: { category: newEstado.category_id }
       });
 
       setSizes(data);
@@ -89,38 +84,28 @@ function ProductModal({ product, closeModal }) {
   }
 
   function handleInputChange(e) {
-    setNewProduct({ ...newProduct, [e.target.name]: e.target.value });
+    setNewEstado({ ...newEstado, [e.target.name]: e.target.value });
   }
 
   function handleProductSizesChange(e) {
     const options = Object.values(e.target.options);
     const selectedOptions = options.filter(option => option.selected);
 
-    setNewProduct({
-      ...newProduct,
+    setNewEstado({
+      ...newEstado,
       product_sizes: selectedOptions.map(option => option.value)
     });
   }
 
   async function handleUpdateProduct() {
     const {
-      name,
-      base_price,
-      image_id,
-      category_id,
-      product_sizes,
-      id,
-      esgotado
-    } = newProduct;
+      open
+    } = newEstado;
     try {
       setLoading(true);
 
-      await api.put(`admin/products/${id}`, {
-        name,
-        base_price,
-        image_id,
-        category_id,
-        esgotado
+      await api.put(`admin/state/${open}`, {
+        open
         //sizes: product_sizes.map(size => ({
         //  size_id: size
 		//})
@@ -138,23 +123,14 @@ function ProductModal({ product, closeModal }) {
 
   async function handleCreateProduct() {
     const {
-      name,
-      base_price,
-      image_id,
-      category_id,
-      product_sizes,
-      esgotado
-    } = newProduct;
+      open
+    } = newEstado;
 
     try {
       setLoading(true);
 
-      await api.post("admin/products", {
-        name,
-        base_price,
-        image_id,
-        category_id,
-        esgotado
+      await api.post("admin/state", {
+        open
       });
 
       closeModal();
@@ -169,7 +145,7 @@ function ProductModal({ product, closeModal }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (product) {
+    if (estado) {
       handleUpdateProduct();
     } else {
       handleCreateProduct();
@@ -179,59 +155,11 @@ function ProductModal({ product, closeModal }) {
   return (
     <Container id="outsideProductModal">
       <ProductForm onSubmit={handleSubmit}>
-        <h2>{product ? "Editar" : "Criar"} produto</h2>
-        <input
-          name="name"
-          value={newProduct.name}
-          onChange={handleInputChange}
-          placeholder="Nome"
-        />
-        <input
-          name="base_price"
-          type="number"
-          min="0"
-          max="1000"
-          step="0.01"
-          value={newProduct.base_price}
-          onChange={handleInputChange}
-          placeholder="Preço base"
-        />
-        <div>
-          <label>Imagem</label>
-          <select
-            value={newProduct.image_id}
-            name="image_id"
-            onChange={handleInputChange}
-          >
-            {images.length &&
-              images.map(image => (
-                <option key={image.id} value={image.id}>
-                  {image.original_name}
-                </option>
-              ))}
-            <option value="" />
-          </select>
-        </div>
-        <div>
-          <label>Categoria</label>
-          <select
-            value={newProduct.category_id}
-            name="category_id"
-            onChange={handleInputChange}
-          >
-            {categories.length &&
-              categories.map(category => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            <option value="" />
-          </select>
-        </div>
+        <h2>Estado {estado ? "Editar" : "Criar"} produto</h2>
         <div>
           <label>Esgotado</label>
           <select
-            value={newProduct.esgotado}
+            value={newEstado.esgotado}
             name="esgotado"
             onChange={handleInputChange}
           >
@@ -279,4 +207,7 @@ ProductForm.propTypes = {
   esgotado: PropTypes.number
 };
 
-export default ProductModal;
+export default EstadoModal;
+
+
+

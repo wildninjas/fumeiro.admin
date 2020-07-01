@@ -7,7 +7,7 @@ import { convertToBRL } from '../../../services/currency'
 import api from '../../../services/api'
 
 import NoImage from '../../../assets/images/no-image.jpg'
-import { HeaderMain,SubMenu } from '../../../pages/App/styles'
+import { HeaderMain,SubMenu } from '../styles'
 import $ from "jquery";
 import jsPDF from 'jspdf'
 import {
@@ -19,12 +19,15 @@ import {
   Filters
 } from './styles'
 
+
 const INITIAL_STATE = {
   pendente: true,
-  cancelado: true,
-  pago: true,
-  enviado: true,
-  finalizado: true
+  cancelado: false,
+  pago: false,
+  enviado: false,
+  finalizado: false,
+  Suspenso: false,
+  Suspenso: false
 }
 
 
@@ -45,7 +48,7 @@ function filterReducer (state, action) {
   }
 }
 
-function Orders () {
+function Suspensos () {
   const [orders, setOrders] = useState([])
   const [filters, dispatch] = useReducer(filterReducer, INITIAL_STATE)
 
@@ -108,17 +111,19 @@ function Orders () {
 
   function renderFilters () {
     return (
-      <Filters>
+		
+		<Filters>
+		 <h1>Suspensos</h1>
         {Object.keys(filters).map(filter => (
-          <div
+          <a
             key={filter}
             onClick={() => dispatch({ type: filter })}
             className={filters[filter] ? 'active' : ''}
           >
-            {filter}
-          </div>
+            
+		  </a>
         ))}
-      </Filters>
+	</Filters>
     )
   }
 
@@ -134,6 +139,7 @@ function Orders () {
 		
 		  
         <div id="pedido" className='orderHeader'>
+			
           <h2>
             Pedido <strong>#{order.id}</strong> - {order.user.name}
           </h2>
@@ -174,10 +180,7 @@ function Orders () {
           <strong>Observações: </strong>
           {order.observations}<br></br>
         </span>
-		<span>
-		<strong>Forma de Entrega: </strong>
-          {order.type}<br></br>
-        </span>
+       
         <span>
           <strong>Endereço: </strong>
           {order.street + ' ' + order.number}<br></br>
@@ -197,11 +200,6 @@ function Orders () {
 		<strong>Forma de Pagamento: </strong>
           {order.pagamento}<br></br>
         </span>
-
-		<span>
-		<strong>Telemóvel: </strong>
-          {order.cel}<br></br>
-        </span>
       </OrderCard>
     ) : null
   }
@@ -213,8 +211,7 @@ function Orders () {
           imageUrl={
             item.product.image
               ? item.product.image.url
-			  : NoImage
-			  
+              : NoImage
           }
         />
         <div>
@@ -237,4 +234,4 @@ function Orders () {
   )
 }
 
-export default Orders
+export default Suspensos

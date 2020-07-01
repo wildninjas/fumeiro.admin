@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FaTrash, FaEdit, FaPlusCircle, FaUndo, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import { FaTrash, FaEdit, FaPlusCircle, FaUndo } from "react-icons/fa";
 
 import githubIcon from "../assets/images/github-icon.png";
 
@@ -12,32 +12,6 @@ export const EditDeleteOptions = styled.div`
 `;
 
 export const DeleteButton = styled(FaTrash).attrs({
-  size: 24
-})`
-  flex-shrink: 0;
-  color: #f15454;
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &:hover {
-    color: #e62638;
-  }
-`;
-
-export const YesButton = styled(FaThumbsUp).attrs({
-  size: 24
-})`
-  flex-shrink: 0;
-  color: #f15454;
-  cursor: pointer;
-  transition: all 0.3s;
-
-  &:hover {
-    color: #e62638;
-  }
-`;
-
-export const NoButton = styled(FaThumbsDown).attrs({
   size: 24
 })`
   flex-shrink: 0;

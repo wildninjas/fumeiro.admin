@@ -22,9 +22,7 @@ import {
   EditDeleteOptions,
   EditButton,
   DeleteButton,
-  AddButton,
-  YesButton,
-  NoButton
+  AddButton
 } from '../../../styles/buttons'
 
 function Suspensos () {
@@ -49,30 +47,6 @@ function Suspensos () {
       loadProducts()
     }
   }, [modalOpen])
-
-  async function handleUpdateProduct(esgotado,id, name, category_id, base_price,) {
-    try {
-
-      await api.put(`admin/products/${id}`, {
-        esgotado,
-        name,
-        category_id,
-        base_price
-        //sizes: product_sizes.map(size => ({
-        //  size_id: size
-		//})
-		//)
-      });
-
-      toast.success("Produto atualizado!");
-	  window.location.reload(false);
-    } catch (err) {
-      toast.error("Erro ao editar o produto, confira os dados preenchidos");
-	  window.location.reload(false);
-    } finally {
-
-    }
-  }
 
   async function loadProducts () {
     try {
@@ -114,26 +88,8 @@ function Suspensos () {
     }
   }
 
-  function renderEsgotado(product,esgotado){
-	  if (product.esgotado==0){
-		  return (
-			  <font color="red">Esgotado</font>
-		  );
-	  }else{
-		  return (
-			  <font color="green">Não Esgotado</font>
-		  );
-	  }
-
-
-  }
-
   function renderProduct (product) {
-	  
-	  if (product.esgotado==0){
-
-		  return (
-		
+    return (
       <ProductCard key={product.id}>
         <ProductTop>
           <ProductInfo>
@@ -153,62 +109,15 @@ function Suspensos () {
             </ProductDetails>
           </ProductInfo>
           <EditDeleteOptions>
-            <ProductDetails>
-              <strong>Produto Esgotado?</strong>
-			  
-			  <p><br/><b><font color="green">Não Esgotado</font></b></p>
-            </ProductDetails>
-            <YesButton onClick={() => handleUpdateProduct(1, product.id, product.name, product.category_id, product.base_price)} />
-            <br/><br/>
-			<NoButton
-                onClick={() => handleUpdateProduct(0, product.id, product.name, product.category_id, product.base_price)}
+		  <Switch/>
+            <EditButton onClick={() => setEditProduct(product)} />
+            <DeleteButton
+              onClick={() => deleteToastNotification(product.id)}
             />
           </EditDeleteOptions>
         </ProductTop>
       </ProductCard>
     )
-
-	  }else{
-		  return (
-		
-      <ProductCard key={product.id}>
-        <ProductTop>
-          <ProductInfo>
-            <ProductImage
-              imageUrl={product.image ? product.image.url : NoImage}
-            />
-            <ProductDetails>
-              <strong>{product.name}</strong>
-              <p>
-                <span>Categoria: </span>
-                {product.category.name}
-              </p>
-              <p>
-                <span>Preço: </span>
-                {product.base_price_formatted}
-              </p>
-            </ProductDetails>
-          </ProductInfo>
-          <EditDeleteOptions>
-            <ProductDetails>
-              <strong>Produto Esgotado?</strong>
-			  
-			  <p><br/><b><font color="red">Esgotado</font></b></p>
-            </ProductDetails>
-            <YesButton onClick={() => handleUpdateProduct(1, product.id, product.name, product.category_id, product.base_price)} />
-            <br/><br/>
-			<NoButton
-                onClick={() => handleUpdateProduct(0, product.id, product.name, product.category_id, product.base_price)}
-            />
-          </EditDeleteOptions>
-        </ProductTop>
-      </ProductCard>
-    )
-
-	  }
-
-
-    
   }
 
   return (

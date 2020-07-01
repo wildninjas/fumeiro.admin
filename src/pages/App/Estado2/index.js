@@ -1,22 +1,41 @@
-import React, { useState, useEffect } from 'react'
-import { toast } from 'react-toastify'
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
-import api from '../../../services/api'
+import api from "../../../services/api";
+
+import NoImage from "../../../assets/images/no-image.jpg";
+import CategoryModal from "../../../components/CategoryModal";
+import ProductModal from '../../../components/ProductModal';
+import EstadoAtual from './EstadoAtual';
+import SimpleMenu from "../../../components/menu"
+
+
+
+
 import { convertToBRL } from '../../../services/currency'
 
-import NoImage from '../../../assets/images/no-image.jpg'
-import ProductModal from '../../../components/ProductModal'
+
+
 import Switch from "../../../components/Switch"
 
 import {
-  Container,
-  ProductCard,
+  
+  
   ProductTop,
   ProductImage,
   ProductInfo,
   ProductDetails,
   ProductBottom
-} from './styles'
+} from '../Products/styles'
+
+import {
+  Container,
+  CategoryCard,
+  CategoryInfo,
+  CategoryImage,
+  ProductCard,
+  CategoryDetails
+} from "./styles";
 
 import {
   EditDeleteOptions,
@@ -27,8 +46,8 @@ import {
   NoButton
 } from '../../../styles/buttons'
 
-function Suspensos () {
-  const [products, setProducts] = useState([])
+function Estado2() {
+ const [products, setProducts] = useState([])
   const [editProduct, setEditProduct] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [deleteToast, setDeleteToast] = useState(null)
@@ -50,25 +69,31 @@ function Suspensos () {
     }
   }, [modalOpen])
 
-  async function handleUpdateProduct(esgotado,id, name, category_id, base_price,) {
+  async function handleUpdateProduct(estado,id,open) {
     try {
 
-      await api.put(`admin/products/${id}`, {
-        esgotado,
-        name,
-        category_id,
-        base_price
+      await api.put(`admin/state/${id}`, {
+        open,
+		estado 
+        
         //sizes: product_sizes.map(size => ({
         //  size_id: size
 		//})
 		//)
       });
 
-      toast.success("Produto atualizado!");
+      toast.success("ESTADO DA LOJA ALTERADO!");
 	  window.location.reload(false);
     } catch (err) {
-      toast.error("Erro ao editar o produto, confira os dados preenchidos");
-	  window.location.reload(false);
+		const toastToUp = toast.info(
+        "Erro: "+err+" Aqui o Open => "+open+" Aqui o Estado => "+estado,
+        {
+          
+          autoClose: 10000
+        }
+      )
+      
+	  //window.location.reload(false);
     } finally {
 
     }
@@ -76,12 +101,12 @@ function Suspensos () {
 
   async function loadProducts () {
     try {
-      const { data } = await api.get('admin/products')
+      const { data } = await api.get('admin/state')
 
       setProducts(
         data.map(product => ({
           ...product,
-          base_price_formatted: convertToBRL(Number(product.base_price))
+          
         }))
       )
     } catch (err) {
@@ -105,7 +130,7 @@ function Suspensos () {
 
   async function deleteProduct (id) {
     try {
-      await api.delete(`admin/products/${id}`)
+      await api.delete(`admin/state/${id}`)
 
       loadProducts()
       toast.success('Produto deletado!')
@@ -114,8 +139,8 @@ function Suspensos () {
     }
   }
 
-  function renderEsgotado(product,esgotado){
-	  if (product.esgotado==0){
+  function renderEsgotado(product){
+	  if (product==0){
 		  return (
 			  <font color="red">Esgotado</font>
 		  );
@@ -128,12 +153,58 @@ function Suspensos () {
 
   }
 
+
+
+
   function renderProduct (product) {
-	  
-	  if (product.esgotado==0){
+	  if (product.estado == 0){
 
-		  return (
-		
+						return (
+						<ProductCard>
+							<h1><font color="green">LOJA ATIVADA</font></h1><br/><br/>
+							<b>Última alteração:{product.updated_at}</b><br/><br/><br/>
+						{/*<NoButton onClick={product.estado=1} />*/}
+            			DESEJA DESATIVAR A LOJA? <br/><br/><NoButton onClick={() => handleUpdateProduct("1",product.id,product.open)}/>
+						</ProductCard>
+
+
+						//<ProductCard><p>Ativado</p>
+						//<b>ID:{product.id}</b>
+						//<b>open:{product.open}</b>
+						//<b>Estado:{product.estado}</b>
+						//{/*<NoButton onClick={product.estado=1} />*/}
+            		//	hand 0: <NoButton onClick={() => handleUpdateProduct(1,product.id,product.open)}/>
+					//	</ProductCard> 		
+						
+										
+						
+						);
+						 
+					}else{
+						return (
+						<ProductCard>
+							<h1><font color="red">LOJA DESATIVADA</font></h1>
+							<b>Última alteração:{product.updated_at}</b><br/><br/>
+						{/*<NoButton onClick={product.estado=1} />*/}
+            			DESEJA ATIVAR A LOJA?<br/><br/> <YesButton onClick={() => handleUpdateProduct("0",product.id,product.open)}/>
+						{/*<p>Desativado</p>
+						<b>ID:{product.id}</b>
+						<b>open:{product.open}</b>
+						<b>Estado:{product.estado}</b>
+						hand 1:  
+						<YesButton onClick={() => handleUpdateProduct("0",product.id,product.open)} />
+            			{/*<YesButton onClick={product.estado=0}/>*/}
+						
+						</ProductCard>
+						
+						
+						);
+					}
+							
+				
+ 				
+
+    return (
       <ProductCard key={product.id}>
         <ProductTop>
           <ProductInfo>
@@ -144,7 +215,7 @@ function Suspensos () {
               <strong>{product.name}</strong>
               <p>
                 <span>Categoria: </span>
-                {product.category.name}
+                {product.open} 
               </p>
               <p>
                 <span>Preço: </span>
@@ -155,74 +226,29 @@ function Suspensos () {
           <EditDeleteOptions>
             <ProductDetails>
               <strong>Produto Esgotado?</strong>
-			  
-			  <p><br/><b><font color="green">Não Esgotado</font></b></p>
             </ProductDetails>
             <YesButton onClick={() => handleUpdateProduct(1, product.id, product.name, product.category_id, product.base_price)} />
-            <br/><br/>
-			<NoButton
+            <NoButton
                 onClick={() => handleUpdateProduct(0, product.id, product.name, product.category_id, product.base_price)}
-            />
+            /><p><br/>{renderEsgotado()}</p>
           </EditDeleteOptions>
         </ProductTop>
       </ProductCard>
     )
-
-	  }else{
-		  return (
-		
-      <ProductCard key={product.id}>
-        <ProductTop>
-          <ProductInfo>
-            <ProductImage
-              imageUrl={product.image ? product.image.url : NoImage}
-            />
-            <ProductDetails>
-              <strong>{product.name}</strong>
-              <p>
-                <span>Categoria: </span>
-                {product.category.name}
-              </p>
-              <p>
-                <span>Preço: </span>
-                {product.base_price_formatted}
-              </p>
-            </ProductDetails>
-          </ProductInfo>
-          <EditDeleteOptions>
-            <ProductDetails>
-              <strong>Produto Esgotado?</strong>
-			  
-			  <p><br/><b><font color="red">Esgotado</font></b></p>
-            </ProductDetails>
-            <YesButton onClick={() => handleUpdateProduct(1, product.id, product.name, product.category_id, product.base_price)} />
-            <br/><br/>
-			<NoButton
-                onClick={() => handleUpdateProduct(0, product.id, product.name, product.category_id, product.base_price)}
-            />
-          </EditDeleteOptions>
-        </ProductTop>
-      </ProductCard>
-    )
-
-	  }
-
-
-    
   }
 
   return (
     <Container>
-      <AddButton onClick={() => setModalOpen(true)} />
-      {modalOpen && (
-        <ProductModal
-          closeModal={() => setModalOpen(false)}
-          product={editProduct}
-        />
-      )}
+      
       {products.map(product => renderProduct(product))}
+	  
     </Container>
   )
 }
+  
 
-export default Suspensos
+
+  
+
+
+export default Estado2 ;

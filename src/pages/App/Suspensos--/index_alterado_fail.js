@@ -6,6 +6,8 @@ import { toast } from 'react-toastify'
 import { convertToBRL } from '../../../services/currency'
 import api from '../../../services/api'
 
+import socketIOClient from 'socket.io-client'
+
 import NoImage from '../../../assets/images/no-image.jpg'
 import { HeaderMain,SubMenu } from '../../../pages/App/styles'
 import $ from "jquery";
@@ -21,11 +23,12 @@ import {
 
 const INITIAL_STATE = {
   pendente: true,
-  cancelado: true,
+  cancelado: false,
   pago: true,
   enviado: true,
-  finalizado: true
+  finalizado: false
 }
+
 
 
 function filterReducer (state, action) {
@@ -174,10 +177,7 @@ function Orders () {
           <strong>Observações: </strong>
           {order.observations}<br></br>
         </span>
-		<span>
-		<strong>Forma de Entrega: </strong>
-          {order.type}<br></br>
-        </span>
+       
         <span>
           <strong>Endereço: </strong>
           {order.street + ' ' + order.number}<br></br>
@@ -197,11 +197,6 @@ function Orders () {
 		<strong>Forma de Pagamento: </strong>
           {order.pagamento}<br></br>
         </span>
-
-		<span>
-		<strong>Telemóvel: </strong>
-          {order.cel}<br></br>
-        </span>
       </OrderCard>
     ) : null
   }
@@ -213,8 +208,7 @@ function Orders () {
           imageUrl={
             item.product.image
               ? item.product.image.url
-			  : NoImage
-			  
+              : NoImage
           }
         />
         <div>
@@ -225,10 +219,33 @@ function Orders () {
       </ItemCard>
     )
   }
-  
+
+var compra = 0;
+
+
+function ouvirReload(){
+
+
+const compra = 0;
+
+function btnReloadOrders(){
+
+compra = 0;
+
+}
+
+
+ 
+
 
   return (
     <Container>
+
+
+		<button onClick={btnReloadOrders}>Novas Pedidos{document.print(compra)}</button>
+
+	  {ouvirReload()}
+
       {renderFilters()}
       {orders.map(order => renderOrder(order))}
       <button onClick={refreshPage}>Click to reload!</button>

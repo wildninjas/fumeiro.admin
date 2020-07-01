@@ -50,7 +50,6 @@ export const ProductDetails = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 20px;
-  align-items: center;
 
   strong {
     font-size: 18px;

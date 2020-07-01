@@ -11,6 +11,7 @@ export const Container = styled.div`
 
 export const ProductCard = styled.div`
   width: 100%;
+  align: center;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;

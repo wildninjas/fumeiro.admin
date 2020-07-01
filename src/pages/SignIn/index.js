@@ -75,7 +75,7 @@ function SignIn({ history }) {
     }
   }
   //mostra qual o REACT_APP_API_URL na tela de login
-  toast.success(hostname);
+  //toast.success(hostname);
 
   
   return (

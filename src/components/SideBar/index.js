@@ -1,23 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
+import { toast } from "react-toastify";
+import { logout } from '../../services/auth'
 import Container from './styles'
 import RestaurantIcon from '@material-ui/icons/Restaurant';
 import RestaurantMenuIcon from '@material-ui/icons/RestaurantMenu';
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
-
-
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import RoomServiceIcon from '@material-ui/icons/RoomService';
-import { toast } from "react-toastify";
-import { logout } from '../../services/auth'
-import ReportIcon from '@material-ui/icons/Report';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import MotorcycleIcon from '@material-ui/icons/Motorcycle';
-import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
-import CancelIcon from '@material-ui/icons/Cancel';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PanToolIcon from '@material-ui/icons/PanTool';
+
 
 function handleLogout () {
 	logout();
@@ -26,6 +20,7 @@ function handleLogout () {
 	window.location.reload(false);
   }
 
+
 function SideBar ({ page, changePage }) {
   return (
     <Container page={page}>
@@ -33,50 +28,46 @@ function SideBar ({ page, changePage }) {
         className={page === 'Orders' ? 'active' : ''}
         onClick={() => changePage('Orders')} 
       >
-       <RoomServiceIcon style={{ fontSize: 35 }} /><br/> Todos os Pedidos
+       <RoomServiceIcon style={{ fontSize: 40 }} /><br/> Pedidos
       </li>
       <li
-        className={page === 'Pendentes' ? 'active' : ''}
-        onClick={() => changePage('Pendentes')} 
+        className={page === 'Categories' ? 'active' : ''}
+        onClick={() => changePage('Categories')} 
       >
-        <ReportIcon style={{ fontSize: 35 }} /><br/>Pendentes
+        <MenuBookIcon style={{ fontSize: 40 }} /><br/>Categorias
       </li>
      
       <li
-        className={page === 'Pagos' ? 'active' : ''}
-        onClick={() => changePage('Pagos')}
+        className={page === 'Products' ? 'active' : ''}
+        onClick={() => changePage('Products')}
       >
-       <MonetizationOnIcon style={{ fontSize: 35 }} /><br/> Pagos
-      </li>
-      <li
-        className={page === 'Enviados' ? 'active' : ''}
-        onClick={() => changePage('Enviados')}
-      >
-       <MotorcycleIcon style={{ fontSize: 35 }} /><br/> Enviados
-      </li>
-	  <li
-        className={page === 'Finalizados' ? 'active' : ''}
-        onClick={() => changePage('Finalizados')}
-      >
-       <AssignmentTurnedInIcon style={{ fontSize: 35 }} /><br/> Finalizados
-      </li>
-	  <li
-        className={page === 'Cancelados' ? 'active' : ''}
-        onClick={() => changePage('Cancelados')}
-      >
-       <CancelIcon style={{ fontSize: 35 }} /><br/> Cancelados
+       <RestaurantIcon style={{ fontSize: 40 }} /><br/> Produtos
       </li>
 	  <li
         className={page === 'Suspensos' ? 'active' : ''}
         onClick={() => changePage('Suspensos')}
       >
-       <PauseCircleFilledIcon style={{ fontSize: 35 }} /><br/> Produtos Suspensos
+       <PauseCircleFilledIcon style={{ fontSize: 40 }} /><br/> Ativar/Suspender Produtos
       </li>
+      <li
+        className={page === 'Images' ? 'active' : ''}
+        onClick={() => changePage('Images')}
+      >
+       <PhotoCameraIcon style={{ fontSize: 40 }} /><br/> Imagens
+      </li>
+
+      <li
+        className={page === 'Estado2' ? 'active' : ''}
+        onClick={() => changePage('Estado2')}
+      >
+       <PanToolIcon style={{ fontSize: 40 }} /><br/> Status da Loja <br/>Ativar/Desativar
+      </li>
+	  
 	  <li
-        className={''}
+        
         onClick={handleLogout}
       >
-       <ExitToAppIcon style={{ fontSize: 35 }} /><br/> Sair
+       <ExitToAppIcon style={{ fontSize: 40 }} /><br/> Sair
       </li>
 
     </Container>
