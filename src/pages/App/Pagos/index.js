@@ -7,7 +7,7 @@ import { convertToBRL } from '../../../services/currency'
 import api from '../../../services/api'
 
 import NoImage from '../../../assets/images/no-image.jpg'
-import { HeaderMain,SubMenu } from '../../../pages/App/styles'
+import { HeaderMain,SubMenu } from '../styles'
 import $ from "jquery";
 import jsPDF from 'jspdf'
 import {
@@ -20,11 +20,12 @@ import {
 } from './styles'
 
 const INITIAL_STATE = {
-  pendente: true,
-  cancelado: true,
+  pendente: false,
+  cancelado: false,
   pago: true,
-  enviado: true,
-  finalizado: true
+  enviado: false,
+  finalizado: false,
+  Suspenso: false
 }
 
 
@@ -45,7 +46,7 @@ function filterReducer (state, action) {
   }
 }
 
-function Orders () {
+function Pagos () {
   const [orders, setOrders] = useState([])
   const [filters, dispatch] = useReducer(filterReducer, INITIAL_STATE)
 
@@ -110,15 +111,16 @@ function Orders () {
   function renderFilters () {
     return (
       <Filters>
-     {/*}   {Object.keys(filters).map(filter => (
-          <div
+		{/*} <h1>Pagos</h1>
+        {Object.keys(filters).map(filter => (
+          <a
             key={filter}
             onClick={() => dispatch({ type: filter })}
             className={filters[filter] ? 'active' : ''}
           >
-            {filter}
-          </div>
-	 ))}*/}
+            
+		  </a>
+		))}*/}
       </Filters>
     )
   }
@@ -169,13 +171,16 @@ function Orders () {
           {order.items.map(item => renderItem(item))}
         </ItemsContainer>
 
-         {/*Adicionando os dados que faltavam no painél do administrador*/}
+        {/*Adicionando os dados que faltavam no painél do administrador*/}
 
         <span>
           <strong>Observações: </strong>
           {order.observations}<br></br>
         </span>
-       
+		<span>
+		<strong>Forma de Entrega: </strong>
+          {order.type}<br></br>
+        </span>
         <span>
           <strong>Endereço: </strong>
           {order.street + ' ' + order.number}<br></br>
@@ -212,9 +217,7 @@ function Orders () {
             item.product.image
               ? item.product.image.url
               : NoImage
-		  }
-		 
-
+          }
         />
         <div>
           <span>{item.product.name}</span>
@@ -236,4 +239,4 @@ function Orders () {
   )
 }
 
-export default Orders
+export default Pagos

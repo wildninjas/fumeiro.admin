@@ -20,11 +20,12 @@ import {
 } from './styles'
 
 const INITIAL_STATE = {
-  pendente: true,
-  cancelado: true,
-  pago: true,
-  enviado: true,
-  finalizado: true
+  pendente: false,
+  cancelado: false,
+  pago: false,
+  enviado: false,
+  finalizado: true,
+  Suspenso: false
 }
 
 
@@ -45,7 +46,7 @@ function filterReducer (state, action) {
   }
 }
 
-function Orders () {
+function Finalizados () {
   const [orders, setOrders] = useState([])
   const [filters, dispatch] = useReducer(filterReducer, INITIAL_STATE)
 
@@ -109,17 +110,18 @@ function Orders () {
 
   function renderFilters () {
     return (
-      <Filters>
-     {/*}   {Object.keys(filters).map(filter => (
-          <div
-            key={filter}
-            onClick={() => dispatch({ type: filter })}
-            className={filters[filter] ? 'active' : ''}
-          >
-            {filter}
-          </div>
-	 ))}*/}
-      </Filters>
+		<Filters>
+		{/*
+	  {Object.keys(filters).map(filter => (
+		<div
+		  key={filter}
+		  onClick={() => dispatch({ type: filter })}
+		  className={filters[filter] ? 'active' : ''}
+		>
+		  {filter}
+		</div>
+	  ))}*/}
+	</Filters>
     )
   }
 
@@ -175,7 +177,10 @@ function Orders () {
           <strong>Observações: </strong>
           {order.observations}<br></br>
         </span>
-       
+		<span>
+		<strong>Forma de Entrega: </strong>
+          {order.type}<br></br>
+        </span>
         <span>
           <strong>Endereço: </strong>
           {order.street + ' ' + order.number}<br></br>
@@ -212,9 +217,7 @@ function Orders () {
             item.product.image
               ? item.product.image.url
               : NoImage
-		  }
-		 
-
+          }
         />
         <div>
           <span>{item.product.name}</span>
@@ -236,4 +239,4 @@ function Orders () {
   )
 }
 
-export default Orders
+export default Finalizados

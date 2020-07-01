@@ -12,7 +12,12 @@ import ProductModalDia from '../../components/ProductModaldoDia'
 import ProductModalPromo from '../../components/ProductModalPromo'
 import Pratosdodia from './Pratosdodia'
 import Promododia from './Promododia'
+import Pendentes from './Pendentes'
+import Pagos from './Pagos'
+import Enviados from './Enviados'
+import Finalizados from './Finalizados'
 import Suspensos from './Suspensos'
+import Cancelados from './Cancelados'
 
 
 
@@ -65,20 +70,18 @@ function App ({ history }) {
 		
         {activePage === 'Orders' ? (
           <Orders />
-        ) : activePage === 'Categories' ? (
-          <Categories />
-		) : activePage === 'Pratosdodia' ? (
-			<Pratosdodia/>
-		) : activePage === 'Promododia' ? (
-			<Promododia />
-        ) : activePage === 'Sizes' ? (
-          <Sizes />
-        ) : activePage === 'Products' ? (
-          <Products />
-		) : activePage === 'Suspensos' ? (
-			<Suspensos />
-        ) : activePage === 'Images' ? (
-          <Images />
+        ) : activePage === 'Pendentes' ? (
+          <Pendentes />
+		) : activePage === 'Pagos' ? (
+			<Pagos/>
+		) : activePage === 'Enviados' ? (
+			<Enviados />
+        ) : activePage === 'Finalizados' ? (
+          <Finalizados />
+		  ) : activePage === 'Cancelados' ? (
+			<Cancelados />
+        ) : activePage === 'Suspensos' ? (
+          <Suspensos />
         ) : null}
       </Main>
     </Container>

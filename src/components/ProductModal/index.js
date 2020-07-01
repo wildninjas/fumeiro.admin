@@ -41,7 +41,7 @@ function ProductModal({ product, closeModal }) {
     if (product) {
       setNewProduct({
         ...product,
-       // product_sizes: product.sizes.map(size => size.size_id)
+        product_sizes: product.sizes.map(size => size.size_id)
       });
     }
   }, [product]);
@@ -83,7 +83,7 @@ function ProductModal({ product, closeModal }) {
 
       setSizes(data);
     } catch (err) {
-      //toast.error("Erro ao buscar os tamanhos");
+      toast.error("Erro ao buscar os tamanhos");
     }
   }
 
@@ -118,10 +118,9 @@ function ProductModal({ product, closeModal }) {
         base_price,
         image_id,
         category_id,
-        //sizes: product_sizes.map(size => ({
-        //  size_id: size
-		//})
-		//)
+        sizes: product_sizes.map(size => ({
+          size_id: size
+        }))
       });
 
       closeModal();
@@ -226,7 +225,7 @@ function ProductModal({ product, closeModal }) {
             <option value="" />
           </select>
         </div>
-       {/* <div>
+        <div>
           <label>Tamanhos</label>
           <select
             multiple
@@ -238,12 +237,12 @@ function ProductModal({ product, closeModal }) {
           >
             {sizes.length &&
               sizes.map(size => (
-                <option key={3} value={3}>
-                  ok
+                <option key={size.id} value={size.id}>
+                  {size.name}
                 </option>
               ))}
           </select>
-			  </div>*/}
+        </div>
         <button type="submit">{loading ? "Carregando..." : "Salvar"}</button>
         <button type="button" className="close" onClick={() => closeModal()}>
           Fechar

@@ -6,7 +6,7 @@ import { convertToBRL } from '../../../services/currency'
 
 import NoImage from '../../../assets/images/no-image.jpg'
 import ProductModal from '../../../components/ProductModal'
-import Switch from "../../../components/Switch"
+//import Switch from "../../../components/Switch"
 
 import {
   Container,
@@ -22,7 +22,9 @@ import {
   EditDeleteOptions,
   EditButton,
   DeleteButton,
-  AddButton
+  AddButton,
+  YesButton,
+  NoButton
 } from '../../../styles/buttons'
 
 function Suspensos () {
@@ -47,10 +49,43 @@ function Suspensos () {
       loadProducts()
     }
   }, [modalOpen])
+  
+  //function renderEsgotado(product) {
+  //  if (product === 0) {
+  //    return (
+  //      <font color='red'>Esgotado</font>
+  //    );
+  //  } else {
+  //    <font color='green'>Não Esgotado</font>
+  //  }
+  //}
 
-  async function loadProducts () {
+  async function handleUpdateProduct(esgotado,id, name, category_id, base_price) {
     try {
-      const { data } = await api.get('admin/products')
+
+      await api.put(`admin/products/${id}`, {
+        esgotado,
+        name,
+        category_id,
+        base_price
+        //sizes: product_sizes.map(size => ({
+        //  size_id: size
+		//})
+		//)
+      });
+
+      toast.success("Produto atualizado!");
+    } catch (err) {
+      toast.error("Erro ao editar o produto, confira os dados preenchidos");
+    } finally {
+
+    }
+  }
+
+  async function loadProducts (id) {
+    try {
+      id = 1;
+      const { data } = await api.get(`admin/products/${id}`)
 
       setProducts(
         data.map(product => ({
@@ -109,11 +144,7 @@ function Suspensos () {
             </ProductDetails>
           </ProductInfo>
           <EditDeleteOptions>
-		  <Switch/>
-            <EditButton onClick={() => setEditProduct(product)} />
-            <DeleteButton
-              onClick={() => deleteToastNotification(product.id)}
-            />
+            <p><br/></p>
           </EditDeleteOptions>
         </ProductTop>
       </ProductCard>

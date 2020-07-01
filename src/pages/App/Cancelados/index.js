@@ -20,11 +20,12 @@ import {
 } from './styles'
 
 const INITIAL_STATE = {
-  pendente: true,
+  pendente: false,
   cancelado: true,
-  pago: true,
-  enviado: true,
-  finalizado: true
+  pago: false,
+  enviado: false,
+  finalizado: false,
+  Suspenso: false
 }
 
 
@@ -45,7 +46,7 @@ function filterReducer (state, action) {
   }
 }
 
-function Orders () {
+function Cancelados () {
   const [orders, setOrders] = useState([])
   const [filters, dispatch] = useReducer(filterReducer, INITIAL_STATE)
 
@@ -69,8 +70,7 @@ function Orders () {
 
       await loadOrders()
 
-	  toast.success('Pedido atualizado!')
-	  window.location.reload(false);
+      toast.success('Pedido atualizado!')
     } catch (err) {
       toast.error('Não foi possível atualizar o pedido')
     }
@@ -109,17 +109,18 @@ function Orders () {
 
   function renderFilters () {
     return (
-      <Filters>
-     {/*}   {Object.keys(filters).map(filter => (
-          <div
-            key={filter}
-            onClick={() => dispatch({ type: filter })}
-            className={filters[filter] ? 'active' : ''}
-          >
-            {filter}
-          </div>
-	 ))}*/}
-      </Filters>
+		<Filters>
+		{/*<h1>Cancelados</h1>
+	  {Object.keys(filters).map(filter => (
+		<div
+		  key={filter}
+		  onClick={() => dispatch({ type: filter })}
+		  className={filters[filter] ? 'active' : ''}
+		>
+		  {filter}
+		</div>
+	  ))}*/}
+	</Filters>
     )
   }
 
@@ -175,7 +176,10 @@ function Orders () {
           <strong>Observações: </strong>
           {order.observations}<br></br>
         </span>
-       
+		<span>
+		<strong>Forma de Entrega: </strong>
+          {order.type}<br></br>
+        </span>
         <span>
           <strong>Endereço: </strong>
           {order.street + ' ' + order.number}<br></br>
@@ -212,9 +216,7 @@ function Orders () {
             item.product.image
               ? item.product.image.url
               : NoImage
-		  }
-		 
-
+          }
         />
         <div>
           <span>{item.product.name}</span>
@@ -236,4 +238,4 @@ function Orders () {
   )
 }
 
-export default Orders
+export default Cancelados
